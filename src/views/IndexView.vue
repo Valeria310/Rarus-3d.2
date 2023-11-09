@@ -10,10 +10,12 @@
                     v-for="p in pages"
                     :id="p.toString()"
                     :key="p"
-                    class="relative h-full w-full shrink-0 snap-center"
+                    class="page__wrapper relative h-full w-full shrink-0 snap-center"
                     :class="{
                         'mt-5': p > 0,
-                        'z-[12] bg-[#eaeaea] dark:bg-[#070707]': p === 0,
+                        'z-[2] bg-[#eaeaea] dark:bg-[#070707]': p === 0,
+                        'z-[1]': p !== 0,
+                        hiddenPage: store.isMenuOpen,
                     }"
                 >
                     <Transition name="fade" mode="out-in" v-show="p === 0">
@@ -53,16 +55,15 @@
                             :next-slide-trigger="nextSlideTrigger[p]"
                             :page-num="p"
                             :isLastSlide="isLastSlide[p]"
-                            @is-horizontal-moving-change="
-                                isHorizontalMoving = $event
-                            "
                             @change-is-last-slide="changeIsLastSlide"
+                            @change-is-first-slide="changeIsFirstSlide"
                         />
                     </Transition>
                 </div>
             </div>
             <div
-                class="flex flex-row justify-between items-center z-[12]"
+                class="logo__wrapper relative flex flex-row justify-between items-center z-[10]"
+                :class="{ hiddenPage: store.isMenuOpen }"
                 :style="{ 'margin-top': 46 + 'px' }"
             >
                 <h1 class="text-xl leading-5 pl-8 flex gap-1">
@@ -83,10 +84,16 @@
             <Transition name="fade">
                 <button
                     v-if="imagesLoadingStatus.get(currentPage) === 'loaded'"
-                    @click="nextSlideTrigger[currentPage] = Math.random()"
+                    @click="
+                        (nextSlideTrigger[currentPage] = Math.random()),
+                            store.changeDirection('left', currentPage)
+                    "
                     type="button"
                     class="arrow arrow-left"
-                    :class="{ inActive: isFirstSlide[currentPage] }"
+                    :class="{
+                        inActive: isFirstSlide[currentPage],
+                        hiddenPage: store.isMenuOpen,
+                    }"
                 >
                     <img src="@/assets/icons/arrow-right.svg" alt="" />
                 </button>
@@ -94,10 +101,16 @@
             <Transition name="fade">
                 <button
                     v-if="imagesLoadingStatus.get(currentPage) === 'loaded'"
-                    @click="nextSlideTrigger[currentPage] = Math.random()"
+                    @click="
+                        (nextSlideTrigger[currentPage] = Math.random()),
+                            store.changeDirection('right', currentPage)
+                    "
                     type="button"
                     class="arrow arrow-right"
-                    :class="{ inActive: isLastSlide[currentPage] }"
+                    :class="{
+                        inActive: isLastSlide[currentPage],
+                        hiddenPage: store.isMenuOpen,
+                    }"
                 >
                     <img src="@/assets/icons/arrow-right.svg" alt="" />
                 </button>
@@ -107,7 +120,10 @@
                     type="button"
                     @click="handleCurrentPage('top')"
                     class="arrow arrow-top"
-                    :class="{ inActive: currentPage === 0 }"
+                    :class="{
+                        inActive: currentPage === 0,
+                        hiddenPage: store.isMenuOpen,
+                    }"
                 >
                     <img src="@/assets/icons/arrow-right.svg" alt="" />
                 </button>
@@ -119,6 +135,7 @@
                     class="arrow arrow-bottom"
                     :class="{
                         inActive: currentPage === pages.length - 1,
+                        hiddenPage: store.isMenuOpen,
                     }"
                 >
                     <img src="@/assets/icons/arrow-right.svg" alt="" />
@@ -131,9 +148,25 @@
                     :class="{
                         'light-gray-text': store.theme === 'light',
                         'dark-gray-text': store.theme === 'dark',
+                        hiddenPage: store.isMenuOpen,
                     }"
                 >
                     AR
+                </button>
+            </Transition>
+            <Transition name="fade">
+                <button
+                    type="button"
+                    class="McButton z-20"
+                    :class="{
+                        light: store.theme === 'light',
+                        dark: store.theme === 'dark',
+                    }"
+                    id="hamburger-menu"
+                    @click="store.toggleMenuStatus()"
+                >
+                    <b></b>
+                    <b></b>
                 </button>
             </Transition>
             <Transition name="fade">
@@ -141,13 +174,15 @@
             </Transition>
         </div>
     </div>
+    <MenuWrapper />
 </template>
 
 <script lang="ts" setup>
-import ImageSlider from "@/components/indexView/ImageSlider.vue";
-import ThemeSwitcher from "@/components/indexView/ThemeSwitcher.vue";
-import { computed, ref, watch } from "vue";
-import { useStore } from "@/stores/index";
+import ImageSlider from '@/components/indexView/ImageSlider.vue';
+import ThemeSwitcher from '@/components/indexView/ThemeSwitcher.vue';
+import MenuWrapper from '@/components/MenuWrapper.vue';
+import { computed, ref, watch } from 'vue';
+import { useStore } from '@/stores/index';
 
 const store = useStore();
 
@@ -164,8 +199,6 @@ const nextSlideTrigger = ref<Record<PageNum, number>>({
 });
 
 const currentPage = ref<PageNum>(0);
-
-const isHorizontalMoving = ref<boolean | undefined>();
 
 const imageCount: Record<PageNum, number> = {
     0: 0,
@@ -198,7 +231,7 @@ const images = ref<Record<PageNum, { dark: string[]; light: string[] }>>({
     },
 });
 
-const imagesLoadingStatus = ref<Map<PageNum, "loading" | "loaded">>(new Map());
+const imagesLoadingStatus = ref<Map<PageNum, 'loading' | 'loaded'>>(new Map());
 
 const scrollEl = ref<HTMLElement | undefined>();
 
@@ -229,9 +262,9 @@ const imagesLoadingProgress = computed(() =>
 
 async function loadImages(pageNum: PageNum) {
     if (imagesLoadingStatus.value.has(pageNum)) return;
-    imagesLoadingStatus.value.set(pageNum, "loading");
+    imagesLoadingStatus.value.set(pageNum, 'loading');
     const promises: Promise<null>[] = [];
-    (["dark", "light"] as const).forEach((type) => {
+    (['dark', 'light'] as const).forEach((type) => {
         new Array(imageCount[pageNum]).fill(null).forEach((v, i) => {
             if (images.value[pageNum][type][i]) return;
             const promise = new Promise<null>((res) => {
@@ -251,16 +284,16 @@ async function loadImages(pageNum: PageNum) {
         });
     });
     await Promise.all(promises);
-    imagesLoadingStatus.value.set(pageNum, "loaded");
+    imagesLoadingStatus.value.set(pageNum, 'loaded');
 }
 
 function handleScroll() {
     const el = scrollEl.value;
-    const page0 = document.getElementById("0");
-    const page1 = document.getElementById("1");
-    const page2 = document.getElementById("2");
-    const page3 = document.getElementById("3");
-    const page4 = document.getElementById("4");
+    const page0 = document.getElementById('0');
+    const page1 = document.getElementById('1');
+    const page2 = document.getElementById('2');
+    const page3 = document.getElementById('3');
+    const page4 = document.getElementById('4');
     const page = currentPage.value;
     if (!el) return;
     switch (Math.round(el.scrollTop)) {
@@ -285,9 +318,9 @@ function handleScroll() {
     }
 }
 
-function handleCurrentPage(direction: "top" | "bottom") {
+function handleCurrentPage(direction: 'top' | 'bottom') {
     const el = scrollEl.value;
-    if (direction === "top") {
+    if (direction === 'top') {
         currentPage.value =
             currentPage.value === 0 ? currentPage.value : currentPage.value - 1;
     } else {
@@ -298,11 +331,17 @@ function handleCurrentPage(direction: "top" | "bottom") {
     }
     el?.scrollTo({
         top: window.innerHeight * currentPage.value,
-        behavior: "smooth",
+        behavior: 'smooth',
     });
 }
 
-function changeIsLastSlide() {}
+function changeIsLastSlide(res: boolean) {
+    isLastSlide.value[currentPage.value] = res;
+}
+
+function changeIsFirstSlide(res: boolean) {
+    isFirstSlide.value[currentPage.value] = res;
+}
 
 watch(
     currentPage,
@@ -347,6 +386,10 @@ watch(
     font-style: normal;
     font-weight: 500;
     transition: all 0.5s;
+
+    &.hiddenPage {
+        right: -100%;
+    }
 }
 
 .arrow {
@@ -360,12 +403,20 @@ watch(
         transform: translateY(-50%) rotate(180deg);
         top: 50%;
         left: 0;
+
+        &.hiddenPage {
+            left: 100%;
+        }
     }
 
     &-right {
         transform: translateY(-50%);
         top: 50%;
         right: 0;
+
+        &.hiddenPage {
+            right: -100%;
+        }
     }
 
     &-top {
@@ -375,6 +426,10 @@ watch(
         transform: translate(-50%) rotate(270deg);
         z-index: 11;
         transition: all 0.3s;
+
+        &.hiddenPage {
+            left: 150%;
+        }
     }
 
     &-bottom {
@@ -383,11 +438,76 @@ watch(
         padding-right: 16px;
         transform: translate(-50%) rotate(90deg);
         z-index: 12;
+
+        &.hiddenPage {
+            left: 150%;
+        }
     }
 
     &.inActive {
         z-index: -1;
         opacity: 0;
+    }
+}
+
+.McButton {
+    position: absolute;
+    right: 40px;
+    top: 47px;
+    width: 18px;
+    height: 8px;
+    cursor: pointer;
+
+    transition: all 0.1s;
+
+    & b {
+        position: absolute;
+        left: 0;
+        width: 18px;
+        height: 2px;
+        border-radius: 1px;
+        transition: all 0.1s;
+
+        &:first-child {
+            top: 0;
+        }
+
+        &:last-child {
+            top: 100%;
+        }
+    }
+
+    &.light {
+        b {
+            background-color: #5b5f65;
+        }
+    }
+
+    &.dark {
+        b {
+            background-color: #9a9fa5;
+        }
+    }
+}
+
+.page__wrapper {
+    transition: all 0.5s;
+    left: 0;
+    border-radius: 0;
+
+    &.hiddenPage {
+        left: calc(100% - 16px);
+        border-radius: 32px 0 0 32px;
+        pointer-events: none;
+    }
+}
+
+.logo__wrapper {
+    left: 32px;
+    transition: all 0.5s;
+
+    &.hiddenPage {
+        left: calc(100% + 32px);
     }
 }
 

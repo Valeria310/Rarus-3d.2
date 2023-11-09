@@ -2,6 +2,7 @@
     <button
         type="button"
         class="theme-toggle z-[12]"
+        :class="{ hiddenPage: store.isMenuOpen }"
         id="theme-toggle"
         title="Toggles light & dark"
         aria-label="auto"
@@ -42,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from "@/stores/index";
+import { useStore } from '@/stores/index';
 
 const store = useStore();
 </script>
@@ -178,6 +179,11 @@ const store = useStore();
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     outline-offset: 5px;
+    transition: all 0.5s;
+
+    &.hiddenPage {
+        left: calc(100% + 32px);
+    }
 }
 
 .theme-toggle > svg {
