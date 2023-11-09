@@ -66,7 +66,7 @@
                 :class="{ hiddenPage: store.isMenuOpen }"
                 :style="{ 'margin-top': 46 + 'px' }"
             >
-                <h1 class="text-xl leading-5 pl-8 flex gap-1">
+                <h1 class="text-xl leading-5 flex gap-1">
                     <span
                         class="logo-text block"
                         :class="{
@@ -139,19 +139,6 @@
                     }"
                 >
                     <img src="@/assets/icons/arrow-right.svg" alt="" />
-                </button>
-            </Transition>
-            <Transition name="fade" v-show="currentPage > 0">
-                <button
-                    type="button"
-                    class="absolute ar-btn z-[12] w-8 h-8 right-8 bottom-8"
-                    :class="{
-                        'light-gray-text': store.theme === 'light',
-                        'dark-gray-text': store.theme === 'dark',
-                        hiddenPage: store.isMenuOpen,
-                    }"
-                >
-                    AR
                 </button>
             </Transition>
             <Transition name="fade">
