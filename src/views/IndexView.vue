@@ -21,7 +21,7 @@
                     <Transition name="fade" mode="out-in" v-show="p === 0">
                         <div class="mainPage absolute left-8">
                             <div class="text-black dark:text-white">
-                                РАЗРАБОТКА ПРОДУКТОВ
+                                {{ $t('mainPage[0]') }}
                             </div>
                             <div
                                 :class="{
@@ -29,10 +29,10 @@
                                     'dark-gray-text': store.theme === 'dark',
                                 }"
                             >
-                                ПРОМЫШЛЕННЫЙ ДИЗАЙН
+                                {{ $t('mainPage[1]') }}
                             </div>
                             <div class="text-black dark:text-white">
-                                КОНСАЛТИНГ
+                                {{ $t('mainPage[2]') }}
                             </div>
                         </div>
                     </Transition>
@@ -66,7 +66,7 @@
                 :class="{ hiddenPage: store.isMenuOpen }"
                 :style="{ 'margin-top': 46 + 'px' }"
             >
-                <h1 class="text-xl leading-5 flex gap-1">
+                <h1 class="text-xl leading-5 flex gap-1" v-if="locale === 'ru'">
                     <span
                         class="logo-text block"
                         :class="{
@@ -78,6 +78,20 @@
                     </span>
                     <span class="logo-text text-black dark:text-white">
                         MVP
+                    </span>
+                </h1>
+                <h1 class="text-xl leading-5 flex gap-1" v-else>
+                    <span class="logo-text text-black dark:text-white">
+                        MVP
+                    </span>
+                    <span
+                        class="logo-text block"
+                        :class="{
+                            'light-gray-text': store.theme === 'light',
+                            'dark-gray-text': store.theme === 'dark',
+                        }"
+                    >
+                        STUDIO
                     </span>
                 </h1>
             </div>
@@ -157,6 +171,19 @@
                 </button>
             </Transition>
             <Transition name="fade">
+                <div
+                    class="lang_btn absolute right-8 bottom-8 z-[12] text-xl font-medium"
+                    :class="{
+                        'light-gray-text': store.theme === 'light',
+                        'dark-gray-text': store.theme === 'dark',
+                        hiddenPage: store.isMenuOpen,
+                    }"
+                    @click="switchLang"
+                >
+                    {{ $t('lang') }}
+                </div>
+            </Transition>
+            <Transition name="fade">
                 <ThemeSwitcher class="absolute left-8 bottom-8" />
             </Transition>
         </div>
@@ -170,6 +197,9 @@ import ThemeSwitcher from '@/components/indexView/ThemeSwitcher.vue';
 import MenuWrapper from '@/components/MenuWrapper.vue';
 import { computed, ref, watch } from 'vue';
 import { useStore } from '@/stores/index';
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n({ useScope: 'global' });
 
 const store = useStore();
 
@@ -328,6 +358,11 @@ function changeIsLastSlide(res: boolean) {
 
 function changeIsFirstSlide(res: boolean) {
     isFirstSlide.value[currentPage.value] = res;
+}
+
+function switchLang() {
+    locale.value === 'en' ? (locale.value = 'ru') : (locale.value = 'en');
+    localStorage.setItem('lang', locale.value);
 }
 
 watch(
@@ -495,6 +530,13 @@ watch(
 
     &.hiddenPage {
         left: calc(100% + 32px);
+    }
+}
+
+.lang_btn {
+    transition: all 0.5s;
+    &.hiddenPage {
+        right: calc(-100% - 32px);
     }
 }
 

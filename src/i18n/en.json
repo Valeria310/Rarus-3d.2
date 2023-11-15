@@ -1,0 +1,29 @@
+{
+    "lang": "RU",
+    "mainPage": ["PRODUCT DEVELOPMENT", "INDUSTRIAL DESIGN", "CONSULTANCY"],
+    "menu": {
+        "about": "ABOUT US",
+        "text": "We develop electronics, software, and mechanical products from idea to MVP.",
+        "lists": [
+            {
+                "title": "Development:",
+                "items": [
+                    "industrial design,",
+                    "3D modeling,",
+                    "UI/UX design,",
+                    "frontend and backend,",
+                    "mobile applications."
+                ]
+            },
+            {
+                "title": "Prototyping:",
+                "items": [
+                    "3D printing,",
+                    "metalworking,",
+                    "silicone plastic molding."
+                ]
+            }
+        ]
+    },
+    "productsLink": "learn more"
+}

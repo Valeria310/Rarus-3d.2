@@ -26,10 +26,10 @@
                     :class="{ visible: isLastSlide }"
                 >
                     <div class="slide__inner flex flex-col">
-                        <div class="slide-info__wrapper">
+                        <div class="slide-info__wrapper" v-if="locale === 'ru'">
                             <div class="title__wrapper">
                                 <h3
-                                    v-for="(title, i) in ProductsInfo[
+                                    v-for="(title, i) in ProductsInfoRu[
                                         props.pageNum
                                     ].title"
                                     :key="i"
@@ -40,7 +40,31 @@
                             </div>
                             <div class="text__wrapper flex flex-col mt-4 gap-2">
                                 <p
-                                    v-for="(text, i) in ProductsInfo[
+                                    v-for="(text, i) in ProductsInfoRu[
+                                        props.pageNum
+                                    ].text"
+                                    :key="i"
+                                    class="slide__text text-[#FFF]"
+                                >
+                                    {{ text }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="slide-info__wrapper" v-else>
+                            <div class="title__wrapper">
+                                <h3
+                                    v-for="(title, i) in ProductsInfoEn[
+                                        props.pageNum
+                                    ].title"
+                                    :key="i"
+                                    class="slide__title text-[#FFF]"
+                                >
+                                    {{ title }}
+                                </h3>
+                            </div>
+                            <div class="text__wrapper flex flex-col mt-4 gap-2">
+                                <p
+                                    v-for="(text, i) in ProductsInfoEn[
                                         props.pageNum
                                     ].text"
                                     :key="i"
@@ -53,7 +77,7 @@
                         <a
                             href="https://t.me/stsh42/72"
                             class="slide__link flex dark-gray-text"
-                            >узнать больше
+                            >{{ $t('productsLink') }}
                             <svg
                                 width="16"
                                 height="16"
@@ -94,10 +118,10 @@
                     :class="{ visible: isLastSlide }"
                 >
                     <div class="slide__inner flex flex-col">
-                        <div class="slide-info__wrapper">
+                        <div class="slide-info__wrapper" v-if="locale === 'ru'">
                             <div class="title__wrapper">
                                 <h3
-                                    v-for="(title, i) in ProductsInfo[
+                                    v-for="(title, i) in ProductsInfoRu[
                                         props.pageNum
                                     ].title"
                                     :key="i"
@@ -108,7 +132,31 @@
                             </div>
                             <div class="text__wrapper flex flex-col mt-4 gap-2">
                                 <p
-                                    v-for="(text, i) in ProductsInfo[
+                                    v-for="(text, i) in ProductsInfoRu[
+                                        props.pageNum
+                                    ].text"
+                                    :key="i"
+                                    class="slide__text"
+                                >
+                                    {{ text }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="slide-info__wrapper" v-else>
+                            <div class="title__wrapper">
+                                <h3
+                                    v-for="(title, i) in ProductsInfoEn[
+                                        props.pageNum
+                                    ].title"
+                                    :key="i"
+                                    class="slide__title"
+                                >
+                                    {{ title }}
+                                </h3>
+                            </div>
+                            <div class="text__wrapper flex flex-col mt-4 gap-2">
+                                <p
+                                    v-for="(text, i) in ProductsInfoEn[
                                         props.pageNum
                                     ].text"
                                     :key="i"
@@ -121,7 +169,7 @@
                         <a
                             href="https://t.me/stsh42/72"
                             class="slide__link flex light-gray-text"
-                            >узнать больше
+                            >{{ $t('productsLink') }}
                             <svg
                                 width="16"
                                 height="16"
@@ -149,7 +197,11 @@
 import { useStore } from '@/stores/index';
 import { storeToRefs } from 'pinia';
 import { ref, watch, type PropType } from 'vue';
-import { ProductsInfo } from '@/productsInfo';
+import { ProductsInfoRu } from '@/productsInfo';
+import { ProductsInfoEn } from '@/productsInfo';
+import { useI18n } from 'vue-i18n';
+
+const { locale } = useI18n({ useScope: 'global' });
 
 const props = defineProps({
     nextSlideTrigger: {
@@ -407,3 +459,4 @@ watch(
     }
 }
 </style>
+@/productsInfo-ru @/productsInfo

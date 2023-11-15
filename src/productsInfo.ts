@@ -3,7 +3,7 @@ export interface ProductInfo {
     text: string[];
 }
 
-export const ProductsInfo: ProductInfo[] = [
+export const ProductsInfoRu: ProductInfo[] = [
     {
         title: [''],
         text: [''],
@@ -33,6 +33,41 @@ export const ProductsInfo: ProductInfo[] = [
         text: [
             'Этот ультранадежный терминал оценки качества создан для безотказной работы в самых жестких условиях. С особым механизмом кнопок и сменными накладками, он предлагает беспрецедентную адаптивность и простоту обслуживания.',
             'Индикация нажатий дополняет его утилитарный дизайн элегантной функциональностью.',
+        ],
+    },
+];
+
+export const ProductsInfoEn: ProductInfo[] = [
+    {
+        title: [''],
+        text: [''],
+    },
+    {
+        title: ['SMART CASHIER FOR', '1S-RARUS'],
+        text: [
+            'The RARUS smart cash register revolutionizes the payment process: 99% accurate dish recognition, 2-second payment with RFID or biometrics.',
+            'Increases service speed and customer satisfaction by reducing wait times.',
+        ],
+    },
+    {
+        title: ['ELECTRIC PANEL FOR', 'EVO CONTROLS'],
+        text: [
+            'Box for intelligent automation systems: a modern minimalist design and functionality for smart homes.',
+            'A two-tier construction of power equipment and control controllers behind tinted glass.Integration with the home system is smarter and more elegant.',
+        ],
+    },
+    {
+        title: ['GROWER - VERTICAL', 'FARMING SYSTEM'],
+        text: [
+            'With the smart vertical growing system, growing greens becomes simpler and more efficient.',
+            'Automatic regulation of lighting, water, and fertilizer supply, as well as climate control, allow for year-round harvesting, making the most of every square centimeter of space.',
+        ],
+    },
+    {
+        title: ['QUALITY OF SERVICE', 'RANKING TERMINAL'],
+        text: [
+            'This ultra-reliable quality assessment terminal is designed for fail-safe operation in the harshest conditions. With a special button mechanism and replaceable overlays, it offers unprecedented adaptability and ease of maintenance.',
+            'Press indication complements its utilitarian design with elegant functionality.',
         ],
     },
 ];

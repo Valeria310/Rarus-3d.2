@@ -13,30 +13,29 @@
             }"
             :style="{ 'margin-top': 46 + 'px' }"
         >
-            О НАС
+            {{ $t('menu.about') }}
         </span>
         <div
             class="menu__inner w-full h-full pr-12 pl-8 pb-10 flex flex-col justify-between gap-5"
         >
             <div class="info text-white dark:text-black">
-                Мы разрабатываем электронику, софт и механические продукты от
-                идеи до MVP.
+                {{ $t('menu.text') }}
                 <div class="list__wrapper">
-                    Разработка:
+                    {{ $t('menu.lists[0].title') }}
                     <ul class="info__list">
-                        <li>промышленный дизайн,</li>
-                        <li>3D моделирование,</li>
-                        <li>UI/UX дизайн,</li>
-                        <li>фронтенд и бэкенд,</li>
-                        <li>мобильные приложения.</li>
+                        <li>{{ $t('menu.lists[0].items[0]') }}</li>
+                        <li>{{ $t('menu.lists[0].items[1]') }}</li>
+                        <li>{{ $t('menu.lists[0].items[2]') }}</li>
+                        <li>{{ $t('menu.lists[0].items[3]') }}</li>
+                        <li>{{ $t('menu.lists[0].items[4]') }}</li>
                     </ul>
                 </div>
                 <div class="list__wrapper">
-                    Прототипирование:
+                    {{ $t('menu.lists[1].title') }}
                     <ul class="info__list">
-                        <li>3D печать,</li>
-                        <li>металлоизделия,</li>
-                        <li>литье пластмасс в силикон.</li>
+                        <li>{{ $t('menu.lists[1].items[0]') }}</li>
+                        <li>{{ $t('menu.lists[1].items[1]') }}</li>
+                        <li>{{ $t('menu.lists[1].items[2]') }}</li>
                     </ul>
                 </div>
             </div>
